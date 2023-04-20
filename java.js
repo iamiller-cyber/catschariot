@@ -6,7 +6,7 @@ images.player = new Image();
 images.player.src = "images/catwhite.png"
 const characterActions = ['up', 'down', 'left', 'right']
 const playerWidth = 32;
-const playerHeight = 34;
+const playerHeight = 32;
 
 let playerFrameX = 0;
 let playerFrameY = 0;
@@ -15,25 +15,66 @@ let playerX = 0;
 let playerY = 0;
 
 const playerSpeed = 5;
-let playerLoc;
+let playerDirection;
 
 function drawSprite(img, sx, sy, sw, sh, dx, dy, dw, dh) {
     ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh)
 }
 
+canvas.onload = () =>
+{drawSprite(images.player, 0, 0, playerWidth, playerHeight, 400, 400, playerWidth, playerHeight)};
+
+
+
 function animate() {
     ctx.clearRect(0,0, canvas.width, canvas.height);
     drawSprite(images.player, playerWidth * playerFrameX, playerHeight * playerFrameY, playerWidth, playerHeight, playerX, playerY, playerWidth, playerHeight)
-    // animates sprite
-    if (playerFrameX < 2) {
-        playerFrameX++; 
-    }
-    else (playerFrameX = 0);
-    // move player
-    if (playerX < canvas.width + playerWidth) {
-        playerX += playerSpeed;
-    }
-    else playerX = 0 - playerWidth;
+    switch (playerDirection) {
+        case "right":
+            if (playerFrameX < 2) {
+                playerFrameX++; 
+            }
+            else (playerFrameX = 0);
+            if (playerX < canvas.width - playerWidth) {
+                playerX += playerSpeed;
+            }
+            else (console.log("You bumped!"))
+            // gameReset()
+            break;
+        case "left":
+            if (playerFrameX < 2) {
+                playerFrameX++;
+            }
+            else (playerFrameX = 0);
+            if (playerX >= 0) {
+                playerX -= playerSpeed;
+            }
+            else (console.log("You bumped!"))
+            // gameReset()
+            break;
+        case "up":
+            if (playerFrameX < 2) {
+                playerFrameX++;
+            }
+            else (playerFrameX = 0);
+            if (playerY >= 0) {
+                playerY -= playerSpeed;
+            }
+            else (console.log("You bumped!"))
+            //gameReset()
+            break;
+        case "down":
+            if (playerFrameX < 2) {
+                playerFrameX++;
+            }
+            else (playerFrameX = 0);
+            if (playerY <= canvas.height - playerHeight) {
+                playerY += playerSpeed;
+            }
+            else (console.log("You bumped!"))
+            //gameReset()
+            break;
+}
 }
 
 window.onload = setInterval(animate, 1000/4);
@@ -44,38 +85,24 @@ window.addEventListener('resize', function () {
 })
 
 window.addEventListener('keydown', function(e) {
-    if (e.target.key = "ArrowLeft") 
-
-
-}
-)
-
-/* images.forEach((state, index) => { 
-    let frames = {
-        loc: [],
+    if (e.key == "ArrowLeft") {
+        playerFrameY = 3;
+        playerDirection = "left"
+        animate()
     }
-    for (let j = 0; j < state.frames; j++) {
-        let positionX = j * spriteWidth;
-        let positionY = index * spriteHeight;
-        frames.loc.push({x: positionX, y: positionY})
+    else if (e.key == "ArrowUp") {
+        playerFrameY = 1;
+        playerDirection = "up"
+        animate()
     }
-    spriteAnimations[state.name] = frames;
-})
-
-
-function animate() {
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-    let position = Math.floor(gameFrame/staggerFrames) % spriteAnimations[playerState].loc.length;
-    let frameX = spriteWidth * position;
-    let frameY = spriteAnimations[playerState].loc[position].y
-    ctx.drawImage(playerImage, frameX, frameY * spriteHeight, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight)
-
-    /*    if (gameFrame % staggerFrames == 0) {
-    if (frameX < 6) frameX ++;
-    else frameX = 0;
+    else if (e.key == "ArrowRight") {
+        playerFrameY = 0;
+        playerDirection = "right"
+        animate()
+    }
+    else if (e.key == "ArrowDown") {
+        playerFrameY = 2;
+        playerDirection = "down"
+        animate()
     } 
-    gameFrame++
-    requestAnimationFrame(animate);
-};
-
-animate() */
+})
